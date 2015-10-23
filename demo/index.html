@@ -3,10 +3,6 @@
 <head>
 	<title>autocrop.js</title>
 	<link rel="stylesheet" type="text/css" href="assets/lib/bootstrap/dist/css/bootstrap.min.css" />
-
-	<script type="text/javascript" src="assets/lib/jquery/dist/jquery.min.js"></script>
-	<script type="text/javascript" src="../src/autocrop.js"></script>
-	<script type="text/javascript" src="assets/js/demo.js"></script>
 </head>
 <body>
 	<div class="container">
@@ -19,10 +15,14 @@
 		<div class="row">
 			<div class="col-md-6">
 				<a href="#" class="thumbnail">
-					<img src="assets/img/test/1.png">
+					<img id="test" src="assets/img/test/1.png" data-src="assets/img/test/1.png" />
 				</a>
 			</div>
 		</div>
 	</div>
+
+	<script type="text/javascript" src="assets/lib/jquery/dist/jquery.min.js"></script>
+	<script type="text/javascript" src="../src/autocrop.js"></script>
+	<script type="text/javascript" src="assets/js/demo.js"></script>
 </body>
 </html>
