@@ -55,6 +55,7 @@ AutoCrop.crop = function(image, options, callback) {
 
     var scale = 1;
     var prescale = 1;
+    
     if (options.width && options.height) {
         scale = min(image.width / options.width, image.height / options.height);
         options.cropWidth = ~~(options.width * scale);
@@ -64,6 +65,7 @@ AutoCrop.crop = function(image, options, callback) {
         // -> don't pick crops that need upscaling
         options.minScale = min(options.maxScale || AutoCrop.DEFAULTS.maxScale, max(1 / scale, (options.minScale || AutoCrop.DEFAULTS.minScale)));
     }
+
     var smartCrop = new AutoCrop(options);
     if (options.width && options.height) {
         if (options.prescale !== false) {
@@ -91,6 +93,7 @@ AutoCrop.crop = function(image, options, callback) {
     callback(result);
     return result;
 };
+
 // check if all the dependencies are there
 AutoCrop.isAvailable = function(options) {
     try {
@@ -112,6 +115,7 @@ AutoCrop.prototype = {
         c.height = h;
         return c;
     },
+
     edgeDetect: function(i, o) {
         var id = i.data,
             od = o.data,
@@ -130,13 +134,14 @@ AutoCrop.prototype = {
             }
         }
     },
+
     skinDetect: function(i, o) {
         var id = i.data,
             od = o.data,
             w = i.width,
             h = i.height,
             options = this.options;
-            
+
         for (var y = 0; y < h; y++) {
             for (var x = 0; x < w; x++) {
                 var p = (y * w + x) * 4,
@@ -150,6 +155,7 @@ AutoCrop.prototype = {
             }
         }
     },
+
     saturationDetect: function(i, o) {
         var id = i.data,
             od = o.data,
@@ -169,6 +175,7 @@ AutoCrop.prototype = {
             }
         }
     },
+
     crops: function(image) {
         var crops = [],
             width = image.width,
@@ -191,6 +198,7 @@ AutoCrop.prototype = {
         }
         return crops;
     },
+
     score: function(output, crop) {
         var score = {
                 detail: 0,
@@ -219,6 +227,7 @@ AutoCrop.prototype = {
         score.total = (score.detail * options.detailWeight + score.skin * options.skinWeight + score.saturation * options.saturationWeight) / crop.width / crop.height;
         return score;
     },
+
     importance: function(crop, x, y) {
         var options = this.options;
 
@@ -237,6 +246,7 @@ AutoCrop.prototype = {
         }
         return s + d;
     },
+
     skinColor: function(r, g, b) {
         var mag = sqrt(r * r + g * g + b * b),
             options = this.options,
@@ -246,6 +256,7 @@ AutoCrop.prototype = {
             d = sqrt(rd * rd + gd * gd + bd * bd);
         return 1 - d;
     },
+
     analyse: function(image) {
         var result = {},
             options = this.options,
@@ -325,6 +336,7 @@ function extend(o) {
             }
         }
     }
+
     return o;
 }
 
@@ -346,11 +358,14 @@ function sample(id, p) {
 function saturation(r, g, b) {
     var maximum = max(r / 255, g / 255, b / 255),
         minumum = min(r / 255, g / 255, b / 255);
+
     if (maximum === minumum) {
         return 0;
     }
+
     var l = (maximum + minumum) / 2,
         d = maximum - minumum;
+
     return l > 0.5 ? d / (2 - maximum - minumum) : d / (maximum + minumum);
 }
 
@@ -361,9 +376,9 @@ if (typeof define !== 'undefined' && define.amd) define(function() {
 
 //common js
 if (typeof exports !== 'undefined') exports.AutoCrop = AutoCrop;
+
 // browser
 else if (typeof navigator !== 'undefined') window.AutoCrop = AutoCrop;
+
 // nodejs
-if (typeof module !== 'undefined') {
-    module.exports = AutoCrop;
-}
+if (typeof module !== 'undefined') module.exports = AutoCrop;
