@@ -118,6 +118,14 @@ AutoCrop.prototype = {
         return c;
     },
 
+    canvasContext: function(w, h) {
+        var c = document.createElement('canvas');
+        c.width = w || 0;
+        c.height = h || 0;
+
+        return c.getContext("2d");
+    },
+
     edgeDetect: function(i, o) {
         var id = i.data,
             od = o.data,
@@ -261,10 +269,13 @@ AutoCrop.prototype = {
     },
 
     analyse: function(image) {
+        console.log(image)
         var result = {};
         var options = this.options;
         var canvas = this.canvas(image.width, image.height);
         var ctx = canvas.getContext('2d');
+
+        console.log(canvas, ctx);
 
         ctx.drawImage(image, 0, 0);
         var input = ctx.getImageData(0, 0, canvas.width, canvas.height),
