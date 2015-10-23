@@ -130,25 +130,6 @@ AutoCrop.prototype = {
             }
         }
     },
-    skinDetect: function(i, o) {
-        var id = i.data,
-            od = o.data,
-            w = i.width,
-            h = i.height,
-            options = this.options;
-        for (var y = 0; y < h; y++) {
-            for (var x = 0; x < w; x++) {
-                var p = (y * w + x) * 4,
-                    lightness = cie(id[p], id[p + 1], id[p + 2]) / 255,
-                    skin = this.skinColor(id[p], id[p + 1], id[p + 2]);
-                if (skin > options.skinThreshold && lightness >= options.skinBrightnessMin && lightness <= options.skinBrightnessMax) {
-                    od[p] = (skin - options.skinThreshold) * (255 / (1 - options.skinThreshold));
-                } else {
-                    od[p] = 0;
-                }
-            }
-        }
-    },
     saturationDetect: function(i, o) {
         var id = i.data,
             od = o.data,
