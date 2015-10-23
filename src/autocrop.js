@@ -66,23 +66,23 @@ AutoCrop.crop = function(image, options, callback) {
         options.minScale = min(options.maxScale || AutoCrop.DEFAULTS.maxScale, max(1 / scale, (options.minScale || AutoCrop.DEFAULTS.minScale)));
     }
 
-    var smartCrop = new AutoCrop(options);
+    var autoCrop = new AutoCrop(options);
     if (options.width && options.height) {
         if (options.prescale !== false) {
             prescale = 1 / scale / options.minScale;
             if (prescale < 1) {
-                var prescaledCanvas = smartCrop.canvas(image.width * prescale, image.height * prescale),
+                var prescaledCanvas = autoCrop.canvas(image.width * prescale, image.height * prescale),
                     ctx = prescaledCanvas.getContext('2d');
                 ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, prescaledCanvas.width, prescaledCanvas.height);
                 image = prescaledCanvas;
-                smartCrop.options.cropWidth = ~~(options.cropWidth * prescale);
-                smartCrop.options.cropHeight = ~~(options.cropHeight * prescale);
+                autoCrop.options.cropWidth = ~~(options.cropWidth * prescale);
+                autoCrop.options.cropHeight = ~~(options.cropHeight * prescale);
             } else {
                 prescale = 1;
             }
         }
     }
-    var result = smartCrop.analyse(image);
+    var result = autoCrop.analyse(image);
     for (var i = 0, i_len = result.crops.length; i < i_len; i++) {
         var crop = result.crops[i];
         crop.x = ~~(crop.x / prescale);
@@ -110,9 +110,11 @@ AutoCrop.prototype = {
         if (this.options.canvasFactory !== null) {
             return this.options.canvasFactory(w, h);
         }
+
         var c = document.createElement('canvas');
-        c.width = w;
-        c.height = h;
+        c.width = w || 0;
+        c.height = h || 0;
+
         return c;
     },
 
@@ -184,6 +186,7 @@ AutoCrop.prototype = {
             minDimension = min(width, height),
             cropWidth = options.cropWidth || minDimension,
             cropHeight = options.cropHeight || minDimension;
+
         for (var scale = options.maxScale; scale >= options.minScale; scale -= options.scaleStep) {
             for (var y = 0; y + cropHeight * scale <= height; y += options.step) {
                 for (var x = 0; x + cropWidth * scale <= width; x += options.step) {
@@ -258,10 +261,11 @@ AutoCrop.prototype = {
     },
 
     analyse: function(image) {
-        var result = {},
-            options = this.options,
-            canvas = this.canvas(image.width, image.height),
-            ctx = canvas.getContext('2d');
+        var result = {};
+        var options = this.options;
+        var canvas = this.canvas(image.width, image.height);
+        var ctx = canvas.getContext('2d');
+
         ctx.drawImage(image, 0, 0);
         var input = ctx.getImageData(0, 0, canvas.width, canvas.height),
             output = ctx.getImageData(0, 0, canvas.width, canvas.height);
