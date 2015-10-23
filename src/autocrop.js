@@ -357,3 +357,12 @@ function saturation(r, g, b) {
 if (typeof define !== 'undefined' && define.amd) define(function() {
     return AutoCrop;
 });
+
+//common js
+if (typeof exports !== 'undefined') exports.AutoCrop = AutoCrop;
+// browser
+else if (typeof navigator !== 'undefined') window.AutoCrop = AutoCrop;
+// nodejs
+if (typeof module !== 'undefined') {
+    module.exports = AutoCrop;
+}
