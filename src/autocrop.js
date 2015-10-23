@@ -352,3 +352,8 @@ function saturation(r, g, b) {
         d = maximum - minumum;
     return l > 0.5 ? d / (2 - maximum - minumum) : d / (maximum + minumum);
 }
+
+// amd
+if (typeof define !== 'undefined' && define.amd) define(function() {
+    return AutoCrop;
+});
